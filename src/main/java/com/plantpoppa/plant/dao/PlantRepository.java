@@ -24,15 +24,4 @@ public interface PlantRepository extends JpaRepository<Plant, Integer> {
     nativeQuery = true)
     Optional<Plant> fetchOneById(int plantId);
 
-    @Query(value = "SELECT * " +
-            "FROM user_plant " +
-            "FULL OUTER JOIN plant ON user_plant.plant_id = plant.plant_id " +
-            "WHERE user_plant.user_id = ?1",
-    nativeQuery = true)
-    List<UserPlant> fetchUserPlantByUser(int userId);
-
-
-    @Query(value = "SELECT * FROM user_plant WHERE user_id = ?1", nativeQuery = true)
-    List<UserPlant> fetchPlantsByUser(int userId);
-
 }

@@ -6,18 +6,24 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name="user_plant")
 public class UserPlant {
-    @JsonProperty("user_plant_id")
+//    @JsonProperty("user_plant_id")
+    @Column(name = "user_plant_id")
     private @Id int userPlantId;
 
+    @Column(name="nickname")
     private String nickname;
 
-    @JsonProperty("plant_id")
+//    @JsonProperty("plant_id")
+    @Column(name="plant_id")
     private int plantId;
 
-    @JsonProperty("user_id")
+//    @JsonProperty("user_id")
+    @Column(name="user_id")
     private int userId;
 
+    @Column(name="snooze")
     private LocalDate snooze;
 
     public UserPlant(int userPlantId, String nickname, int plantId, int user_id, LocalDate snooze) {

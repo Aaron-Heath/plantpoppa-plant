@@ -44,7 +44,8 @@ public class PlantResource {
 
     @GetMapping("/user-plant/{userId}")
     ResponseEntity<?> fetchPlantsByUser(@PathVariable int userId) {
-        List<UserPlant> userPlants = plantService.fetchPlantsByUser(userId);
+//        List<UserPlant> userPlants =
+        List<UserPlant> userPlants = plantService.fetchAllUserPlants();
         return new ResponseEntity<>(userPlants, HttpStatus.OK);
     }
 }
