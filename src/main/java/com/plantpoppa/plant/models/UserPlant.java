@@ -1,13 +1,14 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-
+@Entity
 public class UserPlant {
     @JsonProperty("user_plant_id")
-    private int userPlantId;
+    private @Id int userPlantId;
 
     private String nickname;
 

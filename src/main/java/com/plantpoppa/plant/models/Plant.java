@@ -1,10 +1,13 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
 public class Plant {
     @JsonProperty("plant_id")
-    private int plantId;
+    private @Id int plantId;
 
     @JsonProperty("common_name")
     private String commonName;
