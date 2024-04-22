@@ -12,11 +12,12 @@ public interface UserPlantRepository extends JpaRepository<UserPlant, Integer> {
         @Query(value = "SELECT * FROM user_plant", nativeQuery = true)
         List<UserPlant> fetchAllUserPlants();
 
-//    @Query(value = "SELECT * " +
-//        "FROM user_plant " +
-//        "FULL OUTER JOIN plant ON user_plant.plant_id = plant.plant_id " +
-//        "WHERE user_plant.user_id = ?1",
-//    nativeQuery = true)
-//    List<UserPlant> fetchUserPlantByUser(int userId);
+    @Query(value = "SELECT up.user_plant_id, up.plant_id, up.user_id, up.nickname, up.snooze, " +
+            "p.common_name, p.scientific_name, p.water_frequency, p.water_info, p.sunlight, p.sunlight_info " +
+        "FROM user_plant up " +
+        "FULL OUTER JOIN plant p ON up.plant_id = p.plant_id " +
+        "WHERE up.user_id = ?1",
+    nativeQuery = true)
+    List<UserPlant> fetchUserPlantByUser(int userId);
 
 }

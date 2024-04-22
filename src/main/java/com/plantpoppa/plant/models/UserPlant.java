@@ -16,8 +16,8 @@ public class UserPlant {
     private String nickname;
 
 //    @JsonProperty("plant_id")
-    @Column(name="plant_id")
-    private int plantId;
+//    @Column(name="plant_id")
+//    private int plantId;
 
 //    @JsonProperty("user_id")
     @Column(name="user_id")
@@ -26,10 +26,22 @@ public class UserPlant {
     @Column(name="snooze")
     private LocalDate snooze;
 
-    public UserPlant(int userPlantId, String nickname, int plantId, int user_id, LocalDate snooze) {
+    @ManyToOne
+    @JoinColumn(name="plant_id")
+    private Plant plant;
+
+    public UserPlant(int userPlantId, String nickname,  int user_id, LocalDate snooze, Plant plant) {
         this.userPlantId = userPlantId;
         this.nickname = nickname;
-        this.plantId = plantId;
+//        this.plantId = plantId;
+        this.userId = user_id;
+        this.snooze = snooze;
+        this.plant = plant;
+    }
+
+    public UserPlant(int userPlantId, String nickname,  int user_id, LocalDate snooze) {
+        this.userPlantId = userPlantId;
+        this.nickname = nickname;
         this.userId = user_id;
         this.snooze = snooze;
     }
@@ -53,14 +65,6 @@ public class UserPlant {
         this.nickname = nickname;
     }
 
-    public int getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(int plantId) {
-        this.plantId = plantId;
-    }
-
     public int getUserId() {
         return userId;
     }
@@ -75,5 +79,13 @@ public class UserPlant {
 
     public void setSnooze(LocalDate snooze) {
         this.snooze = snooze;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 }

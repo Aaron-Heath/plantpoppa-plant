@@ -34,12 +34,13 @@ public class PlantService {
         return plantRepository.fetchOneById(plantId);
     }
 
-    public List<UserPlant> fetchUserPlantsByUser(int userId) {
-        return plantRepository.fetchUserPlantByUser(userId);
-    }
 
     public List<UserPlant> fetchAllUserPlants() {
         return userPlantRepository.fetchAllUserPlants();
+    }
+
+    public List<UserPlant> fetchUserPlantsByUser(int userId) {
+        return userPlantRepository.fetchUserPlantByUser(userId);
     }
 
 }
