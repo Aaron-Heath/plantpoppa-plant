@@ -2,8 +2,11 @@ package com.plantpoppa.plant.resources;
 
 
 import com.plantpoppa.plant.models.Plant;
+import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
 import com.plantpoppa.plant.services.PlantService;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +35,11 @@ public class PlantResource {
     }
 
     @GetMapping("/user-plant")
-    ResponseEntity<?> fetchUserPlants(@RequestBody String jwt) {
-        System.out.println(jwt);
+    ResponseEntity<?> fetchUserPlants(ServletRequest request,
+                                      ServletResponse response) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
         // for testing
-        int userId = 1;
+        int userId = simpleUser.getUserId();
 
         List<UserPlant> userPlants = plantService.fetchUserPlantsByUser(userId);
 

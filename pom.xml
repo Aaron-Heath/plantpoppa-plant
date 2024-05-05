@@ -93,6 +93,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.hubspot</groupId>
+			<artifactId>HorizonApache</artifactId>
+			<version>0.2.0</version>
+		</dependency>
 
 
 
