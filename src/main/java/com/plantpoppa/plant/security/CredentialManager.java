@@ -4,9 +4,11 @@ import com.hubspot.horizon.HttpClient;
 import com.hubspot.horizon.HttpRequest;
 import com.hubspot.horizon.HttpResponse;
 import com.hubspot.horizon.apache.ApacheHttpClient;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.security.auth.login.CredentialException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,11 +22,42 @@ public class CredentialManager {
     private static String secret = System.getenv("plantSecret");
     private static String jwt = "";
     private static String refreshToken = System.getenv("plantRefreshToken");
-
-
     private static String authUrl = "http://localhost:8080";
 
+    private static final HttpClient httpClient = new ApacheHttpClient();
+
     private static final String FILE_NAME = "credentials.dat";
+
+    @PostConstruct
+    public void init() throws CredentialException {
+        authenticate();
+
+    }
+
+    public void authenticate() throws CredentialException {
+        HashMap<String, String> body = new HashMap<>();
+        body.put("uuid",uuid);
+        body.put("secret", secret);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .setUrl(authUrl + "/auth/service/authenticate")
+                .setMethod(HttpRequest.Method.POST)
+                .setBody(body)
+                .setContentType(HttpRequest.ContentType.JSON)
+                .build();
+
+        HttpResponse response = httpClient.execute(request);
+
+        if(response.getStatusCode() != 200) {
+            throw new CredentialException("Unable to authenticate to auth service.");
+        }
+
+        RefreshResponse credentials = response.getAs(RefreshResponse.class);
+
+        CredentialManager.setJwt(credentials.getJwt());
+        CredentialManager.setRefreshToken(credentials.getRefreshToken());
+    }
+
 
     public static String getUuid() {
         return uuid;
@@ -57,6 +90,7 @@ public class CredentialManager {
     public static void setRefreshToken(String refreshToken) {
         CredentialManager.refreshToken = refreshToken;
     }
+
 
     public static void refreshJwt() {
         // Request new JWT
