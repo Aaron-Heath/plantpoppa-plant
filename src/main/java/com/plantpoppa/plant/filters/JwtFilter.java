@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.security.auth.login.CredentialException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,19 +40,24 @@ public class JwtFilter implements Filter {
         }
 
         String userJwt = StringUtils.replace(tokenParam.get(), "Bearer ", "");
+        Optional<SimpleUser> optionalUser;
+        try {
+            optionalUser = fetchUserFromAuth(userJwt);
+            SimpleUser simpleUser = optionalUser.get();
 
-        Optional<SimpleUser> optionalUser = fetchUserFromAuth(userJwt);
-        SimpleUser simpleUser = optionalUser.get();
+            request.setAttribute("userInfo", simpleUser);
+            chain.doFilter(request, response);
 
-        System.out.println(simpleUser.getUserId());
+        } catch (CredentialException e) {
+            res.sendError(401, "Invalid Token");
+            return;
+        }
 
-        request.setAttribute("userInfo", simpleUser);
 
-        chain.doFilter(request, response);
 
     }
 
-    public Optional<SimpleUser> fetchUserFromAuth(String jwt) {
+    public Optional<SimpleUser> fetchUserFromAuth(String jwt) throws CredentialException {
         HttpClient httpClient = new ApacheHttpClient();
 
         // Check if we have a serviceJwt
@@ -70,7 +76,7 @@ public class JwtFilter implements Filter {
 
         // Build request
         String url = "http://localhost:8080/auth/service/validate-token";
-        HttpResponse response;
+        HttpResponse authResponse;
         HttpRequest request = HttpRequest.newBuilder()
                 .setUrl(url)
                 .setMethod(HttpRequest.Method.POST)
@@ -78,15 +84,16 @@ public class JwtFilter implements Filter {
                 .addHeader("AUTHORIZATION", "Bearer " + serviceJwt)
                 .setBody(body)
                 .build();
-        response = httpClient.execute(request);
-        if(response.getStatusCode() != 200) {
-            HashMap<String, String> responseBody = response.getAs(HashMap.class);
+        authResponse = httpClient.execute(request);
+        if(authResponse.getStatusCode() != 200) {
+            HashMap<String, String> responseBody = authResponse.getAs(HashMap.class);
             System.out.println(responseBody.get("message"));
-            return Optional.empty();
+            throw new CredentialException(responseBody.get("message"));
+//            return Optional.empty();
         }
 
 
-        SimpleUser simpleUser = response.getAs(SimpleUser.class);
+        SimpleUser simpleUser = authResponse.getAs(SimpleUser.class);
         return Optional.of(simpleUser);
 
     }
