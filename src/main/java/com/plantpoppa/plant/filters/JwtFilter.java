@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import javax.security.auth.login.CredentialException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +55,8 @@ public class JwtFilter implements Filter {
             chain.doFilter(request, response);
 
         } catch (CredentialException e) {
-            res.sendError(401, "Invalid Token");
+            String errorMessage = e.getMessage();
+            res.sendError(401, errorMessage);
             return;
         }
 
@@ -92,9 +94,7 @@ public class JwtFilter implements Filter {
         authResponse = httpClient.execute(request);
         if(authResponse.getStatusCode() != 200) {
             HashMap<String, String> responseBody = authResponse.getAs(HashMap.class);
-            System.out.println(responseBody.get("message"));
-            throw new CredentialException(responseBody.get("message"));
-//            return Optional.empty();
+            throw new CredentialException(responseBody.get("Message"));
         }
 
 
