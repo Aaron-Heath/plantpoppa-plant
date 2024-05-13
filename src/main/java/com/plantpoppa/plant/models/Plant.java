@@ -14,6 +14,9 @@ public class Plant {
     @Id
     private int plantId;
 
+    @Column(name="uuid")
+    private String uuid;
+
     @JsonProperty("common_name")
     @Column(name="common_name")
     private String commonName;
@@ -40,8 +43,9 @@ public class Plant {
     @OneToMany(mappedBy = "plant") // attribute name on the other side of relationship
     private List<UserPlant> userPlants;
 
-    public Plant(int plantId, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+    public Plant(int plantId, String uuid, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
         this.plantId = plantId;
+        this.uuid = uuid;
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.waterFrequency = waterFrequency;
@@ -50,7 +54,8 @@ public class Plant {
         this.sunlightInfo = sunlightInfo;
     }
 
-    public Plant(String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+    public Plant(String uuid, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+        this.uuid = uuid;
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.waterFrequency = waterFrequency;
@@ -68,6 +73,14 @@ public class Plant {
 
     public void setPlantId(int plantId) {
         this.plantId = plantId;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getCommonName() {
