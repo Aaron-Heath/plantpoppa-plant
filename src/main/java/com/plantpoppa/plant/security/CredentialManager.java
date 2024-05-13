@@ -7,26 +7,23 @@ import com.hubspot.horizon.apache.ApacheHttpClient;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import javax.security.auth.login.CredentialException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.ObjectInputStream;
 import java.util.HashMap;
-import java.util.Map;
 
-@Component
 public class CredentialManager {
-    private static String uuid = System.getenv("plantUuid");
-    private static String secret = System.getenv("plantSecret");
-    private static String jwt = "";
-    private static String refreshToken = System.getenv("plantRefreshToken");
-    private static String authUrl = "http://localhost:8080";
+    private String uuid;// = System.getenv("plantUuid");
+    private String secret;// = System.getenv("plantSecret");
+    private String jwt = "";
+    private String refreshToken;
+//    private final String authUrl = "http://localhost:8080";
+    private String authUrl;
 
-    private static final HttpClient httpClient = new ApacheHttpClient();
+    private HttpClient httpClient;
 
-    private static final String FILE_NAME = "credentials.dat";
+
+    public CredentialManager() {
+
+    }
 
     @PostConstruct
     public void init() throws CredentialException {
@@ -54,45 +51,60 @@ public class CredentialManager {
 
         RefreshResponse credentials = response.getAs(RefreshResponse.class);
 
-        CredentialManager.setJwt(credentials.getJwt());
-        CredentialManager.setRefreshToken(credentials.getRefreshToken());
+        this.setJwt(credentials.getJwt());
+        this.setRefreshToken(credentials.getRefreshToken());
     }
 
 
-    public static String getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public static void setUuid(String uuid) {
-        CredentialManager.uuid = uuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public static String getSecret() {
+    public String getSecret() {
         return secret;
     }
 
-    public static void setSecret(String secret) {
-        CredentialManager.secret = secret;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
-    public static String getJwt() {
+    public String getJwt() {
         return jwt;
     }
 
-    public static void setJwt(String jwt) {
-        CredentialManager.jwt = jwt;
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
-    public static String getRefreshToken() {
+    public String getRefreshToken() {
         return refreshToken;
     }
 
-    public static void setRefreshToken(String refreshToken) {
-        CredentialManager.refreshToken = refreshToken;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
+    public String getAuthUrl() {
+        return authUrl;
+    }
 
-    public static void refreshJwt() {
+    public void setAuthUrl(String authUrl) {
+        this.authUrl = authUrl;
+    }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    public void refreshJwt() {
         // Request new JWT
         // Create body
         HashMap<String, String> body = new HashMap<>();
@@ -111,10 +123,8 @@ public class CredentialManager {
         RefreshResponse response = httpClient.execute(request).getAs(RefreshResponse.class);
 
         // Store new JWT and refreshToken
-        CredentialManager.setJwt(response.getJwt());
-        CredentialManager.setRefreshToken(response.getRefreshToken());
-
-
+        this.setJwt(response.getJwt());
+        this.setRefreshToken(response.getRefreshToken());
 
     }
 

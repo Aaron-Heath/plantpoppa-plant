@@ -10,6 +10,7 @@ import com.plantpoppa.plant.security.CredentialManager;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,10 @@ import java.util.Optional;
 
 @Component
 public class JwtFilter implements Filter {
+    @Autowired
+    CredentialManager credentialManager;
+
+
     @Override
     public void doFilter(ServletRequest request,
                         ServletResponse response,
@@ -63,11 +68,11 @@ public class JwtFilter implements Filter {
         // Check if we have a serviceJwt
         String serviceJwt;
 
-        if(CredentialManager.getJwt().isEmpty()) {
-            CredentialManager.refreshJwt(); // Run token refresh flow when Jwt is empty
+        if(credentialManager.getJwt().isEmpty()) {
+            credentialManager.refreshJwt(); // Run token refresh flow when Jwt is empty
         }
 
-        serviceJwt = CredentialManager.getJwt();
+        serviceJwt = credentialManager.getJwt();
         String userJwt = jwt;
 
         // Set request body
