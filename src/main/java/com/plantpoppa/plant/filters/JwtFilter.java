@@ -37,6 +37,12 @@ public class JwtFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse)  response;
         Optional<String> tokenParam = Optional.ofNullable(req.getHeader("AUTHORIZATION"));
 
+        System.out.println(req.getMethod());
+        if(req.getMethod().equals("OPTIONS")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         if(tokenParam.isEmpty()) {
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
             res.setContentType(MediaType.TEXT_HTML_VALUE);
@@ -82,7 +88,7 @@ public class JwtFilter implements Filter {
         body.put("jwt", userJwt);
 
         // Build request
-        String url = "http://localhost:8080/auth/service/validate-token";
+        String url = credentialManager.getAuthUrl() + "/auth/service/validate-token";
         HttpResponse authResponse;
         HttpRequest request = HttpRequest.newBuilder()
                 .setUrl(url)
