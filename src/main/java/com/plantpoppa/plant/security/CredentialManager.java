@@ -27,7 +27,12 @@ public class CredentialManager {
 
     @PostConstruct
     public void init() throws CredentialException {
-        authenticate();
+        try {
+            authenticate();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
