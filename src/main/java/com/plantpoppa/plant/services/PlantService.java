@@ -40,7 +40,8 @@ public class PlantService {
     }
 
     public List<UserPlant> fetchUserPlantsByUser(int userId) {
-        return userPlantRepository.fetchUserPlantByUser(userId);
+//        return userPlantRepository.fetchUserPlantByUser(userId);
+        return userPlantRepository.findByUserId(userId);
     }
 
 }

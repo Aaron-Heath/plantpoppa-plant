@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface UserPlantRepository extends JpaRepository<UserPlant, Integer> {
-        @Query(value = "SELECT * FROM user_plant", nativeQuery = true)
-        List<UserPlant> fetchAllUserPlants();
+    @Query(value = "SELECT * FROM user_plant", nativeQuery = true)
+    List<UserPlant> fetchAllUserPlants();
 
     @Query(value = "SELECT up.user_plant_id, up.uuid, up.plant_id, up.user_id, up.nickname, up.snooze, " +
             "p.common_name, p.scientific_name, p.water_frequency, p.water_info, p.sunlight, p.sunlight_info " +
@@ -19,5 +19,7 @@ public interface UserPlantRepository extends JpaRepository<UserPlant, Integer> {
         "WHERE up.user_id = ?1",
     nativeQuery = true)
     List<UserPlant> fetchUserPlantByUser(int userId);
+
+    List<UserPlant> findByUserId(int uuid);
 
 }

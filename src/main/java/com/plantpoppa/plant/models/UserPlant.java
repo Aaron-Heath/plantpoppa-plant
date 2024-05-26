@@ -1,8 +1,10 @@
 package com.plantpoppa.plant.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +26,12 @@ public class UserPlant {
 
     @Column(name="snooze")
     private LocalDate snooze;
+
+    @OneToMany(mappedBy = "userPlant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Watering> waterings;
+
+    @Formula("(SELECT MAX(w.watering_date) FROM watering w WHERE w.user_plant_id = user_plant_id)")
+    private LocalDate lastWatered;
 
     @ManyToOne
     @JoinColumn(name="plant_id")
@@ -99,5 +107,21 @@ public class UserPlant {
 
     public void setPlant(Plant plant) {
         this.plant = plant;
+    }
+
+    public Set<Watering> getWaterings() {
+        return waterings;
+    }
+
+    public void setWaterings(Set<Watering> waterings) {
+        this.waterings = waterings;
+    }
+
+    public LocalDate getLastWatered() {
+        return lastWatered;
+    }
+
+    public void setLastWatered(LocalDate lastWatered) {
+        this.lastWatered = lastWatered;
     }
 }
