@@ -1,30 +1,51 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
+import java.util.List;
+
+@Entity
 public class Plant {
     @JsonProperty("plant_id")
+    @Id
     private int plantId;
 
+    @Column(name="uuid")
+    private String uuid;
+
     @JsonProperty("common_name")
+    @Column(name="common_name")
     private String commonName;
 
+    @Column(name="scientific_name")
     @JsonProperty("scientific_name")
     private String scientificName;
 
+    @Column(name="water_frequency")
     @JsonProperty("water_frequency")
     private int waterFrequency;
 
+    @Column(name="water_info")
     @JsonProperty("water_info")
     private String waterInfo;
 
+    @Column(name="sunlight")
     private String sunlight;
 
+    @Column(name="sunlight_info")
     @JsonProperty("sunlight_info")
     private String sunlightInfo;
 
-    public Plant(int plantId, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+    @OneToMany(mappedBy = "plant") // attribute name on the other side of relationship
+    private List<UserPlant> userPlants;
+
+    public Plant(int plantId, String uuid, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
         this.plantId = plantId;
+        this.uuid = uuid;
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.waterFrequency = waterFrequency;
@@ -33,7 +54,8 @@ public class Plant {
         this.sunlightInfo = sunlightInfo;
     }
 
-    public Plant(String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+    public Plant(String uuid, String commonName, String scientificName, int waterFrequency, String waterInfo, String sunlight, String sunlightInfo) {
+        this.uuid = uuid;
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.waterFrequency = waterFrequency;
@@ -43,7 +65,6 @@ public class Plant {
     }
 
     public Plant() {
-
     }
 
     public int getPlantId() {
@@ -52,6 +73,14 @@ public class Plant {
 
     public void setPlantId(int plantId) {
         this.plantId = plantId;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getCommonName() {
