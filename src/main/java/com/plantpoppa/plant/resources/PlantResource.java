@@ -4,6 +4,7 @@ package com.plantpoppa.plant.resources;
 import com.plantpoppa.plant.models.Plant;
 import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
+import com.plantpoppa.plant.models.dto.UserPlantDto;
 import com.plantpoppa.plant.services.PlantService;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -38,10 +39,9 @@ public class PlantResource {
     ResponseEntity<?> fetchUserPlants(ServletRequest request,
                                       ServletResponse response) {
         SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
-        // for testing
         int userId = simpleUser.getUserId();
 
-        List<UserPlant> userPlants = plantService.fetchUserPlantsByUser(userId);
+        List<UserPlantDto> userPlants = plantService.fetchUserPlantDtosByUser(userId);
 
         return new ResponseEntity<>(userPlants, HttpStatus.OK);
     }
