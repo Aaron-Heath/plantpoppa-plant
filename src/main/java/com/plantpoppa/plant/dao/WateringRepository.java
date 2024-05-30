@@ -17,4 +17,8 @@ public interface WateringRepository extends JpaRepository<Watering, Integer> {
     nativeQuery = true)
     void insertWateringByUuid(String uuid, LocalDate wateringDate);
 
+    @Transactional
+    @Modifying
+    void deleteByWateringId(int wateringId);
+
 }

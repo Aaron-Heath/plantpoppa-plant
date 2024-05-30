@@ -11,13 +11,9 @@ import jakarta.servlet.ServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -38,7 +34,7 @@ public class JournalResource {
                                      ServletResponse response,
                                      @RequestBody JournalRequestDto journalRequest) {
         SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
-        if(journalRequest.getUserPlantUuid().isBlank()) {
+        if(journalRequest.getEntityUuid().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing request parameters, please try again");
         }
 
@@ -47,7 +43,7 @@ public class JournalResource {
         }
 
         // fetching with uuid and userId to ensure user is the owner of the plant they are modifying
-        Optional<UserPlant> optionalQueriedPlant = plantService.fetchUserPlantByUuidAndUserId(journalRequest.getUserPlantUuid(), simpleUser.getUserId());
+        Optional<UserPlant> optionalQueriedPlant = plantService.fetchUserPlantByUuidAndUserId(journalRequest.getEntityUuid(), simpleUser.getUserId());
 
         if(optionalQueriedPlant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No userPlant found with given criteria.");
@@ -61,11 +57,20 @@ public class JournalResource {
         res.put("message", "watering recorded");
         return new ResponseEntity<>(res, HttpStatus.OK);
 
+    }
 
+    @DeleteMapping
+    ResponseEntity<?> deleteWatering(ServletRequest request,
+                                     ServletResponse response,
+                                     @RequestBody JournalRequestDto journalRequest) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
 
+        if(simpleUser == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again.");
+        }
 
+        journalService.deleteEntry(journalRequest.getEntityId());
 
-
-
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

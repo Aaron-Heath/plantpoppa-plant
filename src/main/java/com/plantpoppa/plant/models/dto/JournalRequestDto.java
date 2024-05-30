@@ -1,20 +1,30 @@
 package com.plantpoppa.plant.models.dto;
 
 public class JournalRequestDto {
-    private String userPlantUuid;
+    private String entityUuid;
+    private int entityId;
 
-    public JournalRequestDto(String userPlantUuid) {
-        this.userPlantUuid = userPlantUuid;
+    public JournalRequestDto(String userPlantUuid, int entityId) {
+        this.entityUuid = userPlantUuid;
+        this.entityId = entityId;
     }
 
     public JournalRequestDto() {
     }
 
-    public String getUserPlantUuid() {
-        return userPlantUuid;
+    public String getEntityUuid() {
+        return entityUuid;
     }
 
-    public void setUserPlantUuid(String userPlantUuid) {
-        this.userPlantUuid = userPlantUuid;
+    public void setEntityUuid(String entityUuid) {
+        this.entityUuid = entityUuid;
+    }
+
+    public int getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
     }
 }
