@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class Watering {
 //    @JsonProperty("watering_id")
     @Column(name = "watering_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private @Id int wateringId;
 
 //    @Column(name = "user_plant_id")
@@ -26,7 +27,7 @@ public class Watering {
 
     public Watering(int wateringId, LocalDate wateringDate) {
         this.wateringId = wateringId;
-//        this.userPlant = userPlant;
+        this.userPlant = userPlant;
         this.wateringDate = wateringDate;
     }
 
@@ -49,11 +50,11 @@ public class Watering {
         this.wateringDate = wateringDate;
     }
 
-//    public UserPlant getUserPlant() {
-//        return userPlant;
-//    }
-//
-//    public void setUserPlant(UserPlant userPlant) {
-//        this.userPlant = userPlant;
-//    }
+    public UserPlant getUserPlant() {
+        return userPlant;
+    }
+
+    public void setUserPlant(UserPlant userPlant) {
+        this.userPlant = userPlant;
+    }
 }
