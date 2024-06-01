@@ -54,7 +54,12 @@ public class JournalResource {
 
         UserPlant userPlant = optionalQueriedPlant.get();
 
-        Watering watering = journalService.createWatering(userPlant);
+        if(journalRequest.getEntryDate() == null) {
+            Watering watering = journalService.createWatering(userPlant);
+        } else {
+            Watering watering = journalService.createWatering(userPlant, journalRequest.getEntryDate());
+        }
+
 
         HashMap<String,String> res = new HashMap<String,String>();
         res.put("message", "watering recorded");

@@ -19,14 +19,35 @@ public class JournalService {
         this.plantService = plantService;
     }
 
+    /**
+     * Creates a watering using today's date. Corresponds with the "quick water" action in the ui.
+     * @param userPlant to maintain relationship between data.
+     * @return created watering
+     * */
     public Watering createWatering(UserPlant userPlant) {
-
         LocalDate today = LocalDate.now();
         Watering watering = new Watering();
         watering.setUserPlant(userPlant);
         watering.setWateringDate(today);
         return wateringRepository.save(watering);
+    }
 
+    /**
+     * Creates a watering using a user-input date. Allows backdating.
+     * @param userPlant
+     * @param wateringDate
+     * @return created watering.
+     */
+    public Watering createWatering(UserPlant userPlant, LocalDate wateringDate) {
+        LocalDate today = LocalDate.now();
+        if (wateringDate.isAfter(today)) {
+            return null;
+        }
+
+        Watering watering = new Watering();
+        watering.setUserPlant(userPlant);
+        watering.setWateringDate(wateringDate);
+        return wateringRepository.save(watering);
     }
 
     public void deleteEntry(int wateringId) {
