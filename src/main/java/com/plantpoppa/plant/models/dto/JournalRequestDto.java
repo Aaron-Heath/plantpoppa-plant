@@ -7,7 +7,6 @@ import java.time.LocalDate;
 public class JournalRequestDto {
     private String entityUuid;
     private int entityId;
-    @JsonFormat(pattern = "M/dd/yyyy")
     private LocalDate entryDate;
 
     public JournalRequestDto(String entityUuid, int entityId, LocalDate entryDate) {

@@ -67,6 +67,19 @@ public class JournalResource {
 
     }
 
+    @PutMapping
+    ResponseEntity<?> updateWatering(ServletRequest request,
+                                     @RequestBody JournalRequestDto journalRequest) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+        if(simpleUser == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again.");
+        }
+        journalService.updateWatering(journalRequest.getEntryDate(), journalRequest.getEntityId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
     @DeleteMapping
     ResponseEntity<?> deleteWatering(ServletRequest request,
                                      ServletResponse response,

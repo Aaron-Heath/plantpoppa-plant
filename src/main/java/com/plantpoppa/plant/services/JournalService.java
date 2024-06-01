@@ -50,6 +50,10 @@ public class JournalService {
         return wateringRepository.save(watering);
     }
 
+    public void updateWatering(LocalDate date, int wateringId) {
+        wateringRepository.updateWatering(date, wateringId);
+    }
+
     public void deleteEntry(int wateringId) {
         wateringRepository.deleteByWateringId(wateringId);
         System.out.println("Journal deleted");
