@@ -1,5 +1,6 @@
 package com.plantpoppa.plant.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -22,6 +23,7 @@ public class Watering {
     LocalDate wateringDate;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_plant_id", nullable = false)
     private UserPlant userPlant;
 

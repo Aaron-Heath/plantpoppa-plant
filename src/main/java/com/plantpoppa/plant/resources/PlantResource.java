@@ -8,10 +8,12 @@ import com.plantpoppa.plant.models.dto.UserPlantDto;
 import com.plantpoppa.plant.services.PlantService;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,9 +48,16 @@ public class PlantResource {
         return new ResponseEntity<>(userPlants, HttpStatus.OK);
     }
 
-    @GetMapping("/user-plant/{userId}")
-    ResponseEntity<?> fetchPlantsByUser(@PathVariable int userId) {
-        List<UserPlant> userPlants = plantService.fetchAllUserPlants();
-        return new ResponseEntity<>(userPlants, HttpStatus.OK);
+    @GetMapping("/user-plant/{userPlantUuid}")
+    ResponseEntity<?> fetchPlantsByUser(@PathVariable String userPlantUuid) {
+        Optional<UserPlant> optionalUserPlant = plantService.fetchUserPlantByUuid(userPlantUuid);
+
+        if(optionalUserPlant.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserPlant not found");
+        }
+
+        UserPlant userPlant = optionalUserPlant.get();
+
+        return new ResponseEntity<>(userPlant, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.plantpoppa.plant.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
@@ -27,6 +28,7 @@ public class UserPlant {
     @Column(name="snooze")
     private LocalDate snooze;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "userPlant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Watering> waterings;
 
