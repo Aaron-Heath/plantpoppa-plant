@@ -4,6 +4,8 @@ import com.plantpoppa.plant.dao.PlantRepository;
 import com.plantpoppa.plant.dao.UserPlantRepository;
 import com.plantpoppa.plant.models.Plant;
 import com.plantpoppa.plant.models.UserPlant;
+import com.plantpoppa.plant.models.Watering;
+import com.plantpoppa.plant.models.dto.UserPlantDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,14 +36,4 @@ public class PlantService {
     public Optional<Plant> fetchOneById(int plantId) {
         return plantRepository.fetchOneById(plantId);
     }
-
-
-    public List<UserPlant> fetchAllUserPlants() {
-        return userPlantRepository.fetchAllUserPlants();
-    }
-
-    public List<UserPlant> fetchUserPlantsByUser(int userId) {
-        return userPlantRepository.fetchUserPlantByUser(userId);
-    }
-
 }

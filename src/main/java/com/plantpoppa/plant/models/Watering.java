@@ -1,22 +1,27 @@
 package com.plantpoppa.plant.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+@Entity
 public class Watering {
-    @JsonProperty("watering_id")
-    private int wateringId;
+    @Column(name = "watering_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private @Id int wateringId;
 
-    @JsonProperty("user_plant_id")
-    private int userPlantId;
-
-    @JsonProperty("watering_date")
+    @Column(name = "watering_date")
     LocalDate wateringDate;
 
-    public Watering(int wateringId, int userPlantId, LocalDate wateringDate) {
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "user_plant_id", nullable = false)
+    private UserPlant userPlant;
+
+    public Watering(int wateringId, LocalDate wateringDate) {
         this.wateringId = wateringId;
-        this.userPlantId = userPlantId;
+        this.userPlant = userPlant;
         this.wateringDate = wateringDate;
     }
 
@@ -31,19 +36,19 @@ public class Watering {
         this.wateringId = wateringId;
     }
 
-    public int getUserPlantId() {
-        return userPlantId;
-    }
-
-    public void setUserPlantId(int userPlantId) {
-        this.userPlantId = userPlantId;
-    }
-
     public LocalDate getWateringDate() {
         return wateringDate;
     }
 
     public void setWateringDate(LocalDate wateringDate) {
         this.wateringDate = wateringDate;
+    }
+
+    public UserPlant getUserPlant() {
+        return userPlant;
+    }
+
+    public void setUserPlant(UserPlant userPlant) {
+        this.userPlant = userPlant;
     }
 }
