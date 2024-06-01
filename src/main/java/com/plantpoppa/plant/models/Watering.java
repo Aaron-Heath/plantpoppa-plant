@@ -1,25 +1,17 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
-//@Table(name="watering")
 public class Watering {
-//    @JsonProperty("watering_id")
     @Column(name = "watering_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private @Id int wateringId;
 
-//    @Column(name = "user_plant_id")
-////    @JsonProperty("user_plant_id")
-//    private int userPlantId;
-
     @Column(name = "watering_date")
-//    @JsonProperty("watering_date")
     LocalDate wateringDate;
 
     @ManyToOne
