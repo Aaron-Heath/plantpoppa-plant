@@ -36,43 +36,4 @@ public class PlantService {
     public Optional<Plant> fetchOneById(int plantId) {
         return plantRepository.fetchOneById(plantId);
     }
-
-
-    // USER PLANT METHODS
-
-    public Optional<UserPlant> fetchUserPlantByUuid(String uuid) {
-        return userPlantRepository.findByUuid(uuid);
-    }
-
-    public List<UserPlant> fetchAllUserPlants() {
-        return userPlantRepository.fetchAllUserPlants();
-    }
-
-    public List<UserPlant> fetchUserPlantsByUser(int userId) {
-        return userPlantRepository.findByUserId(userId);
-    }
-
-    public List<UserPlantDto> fetchUserPlantDtosByUser(int userId) {
-        List<UserPlant> userPlants = userPlantRepository.findByUserId(userId);
-        List<UserPlantDto> userPlantDtos = new ArrayList<>();
-        userPlants.forEach(userPlant -> {
-            userPlantDtos.add(
-                    new UserPlantDto.UserPlantDtoBuilder()
-                            .uuid(userPlant.getUuid())
-                            .nickname(userPlant.getNickname())
-                            .snooze(userPlant.getSnooze())
-                            .plant(userPlant.getPlant())
-                            .lastWatered(userPlant.getLastWatered())
-                            .build()
-            );
-        });
-
-        return userPlantDtos;
-    }
-
-    public Optional<UserPlant> fetchUserPlantByUuidAndUserId(String uuid, int userId) {
-        return userPlantRepository.findByUuidAndUserId(uuid, userId);
-    }
-
-
 }

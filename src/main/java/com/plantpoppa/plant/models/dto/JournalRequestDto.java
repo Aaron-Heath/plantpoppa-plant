@@ -4,8 +4,8 @@ public class JournalRequestDto {
     private String entityUuid;
     private int entityId;
 
-    public JournalRequestDto(String userPlantUuid, int entityId) {
-        this.entityUuid = userPlantUuid;
+    public JournalRequestDto(String entityUuid, int entityId) {
+        this.entityUuid = entityUuid;
         this.entityId = entityId;
     }
 

@@ -36,28 +36,4 @@ public class PlantResource {
         Optional<Plant> plant = plantService.fetchOneById(plantId);
         return new ResponseEntity<>(plant.orElse(null), plant.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
-
-    @GetMapping("/user-plant")
-    ResponseEntity<?> fetchUserPlants(ServletRequest request,
-                                      ServletResponse response) {
-        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
-        int userId = simpleUser.getUserId();
-
-        List<UserPlantDto> userPlants = plantService.fetchUserPlantDtosByUser(userId);
-
-        return new ResponseEntity<>(userPlants, HttpStatus.OK);
-    }
-
-    @GetMapping("/user-plant/{userPlantUuid}")
-    ResponseEntity<?> fetchPlantsByUser(@PathVariable String userPlantUuid) {
-        Optional<UserPlant> optionalUserPlant = plantService.fetchUserPlantByUuid(userPlantUuid);
-
-        if(optionalUserPlant.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserPlant not found");
-        }
-
-        UserPlant userPlant = optionalUserPlant.get();
-
-        return new ResponseEntity<>(userPlant, HttpStatus.OK);
-    }
 }

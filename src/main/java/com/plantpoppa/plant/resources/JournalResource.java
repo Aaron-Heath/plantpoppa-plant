@@ -6,6 +6,7 @@ import com.plantpoppa.plant.models.Watering;
 import com.plantpoppa.plant.models.dto.JournalRequestDto;
 import com.plantpoppa.plant.services.JournalService;
 import com.plantpoppa.plant.services.PlantService;
+import com.plantpoppa.plant.services.UserPlantService;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,13 @@ import java.util.Optional;
 public class JournalResource {
     private final PlantService plantService;
     private final JournalService journalService;
+    private final UserPlantService userPlantService;
 
     @Autowired
-    public JournalResource(PlantService plantService, JournalService journalService) {
+    public JournalResource(PlantService plantService, JournalService journalService, UserPlantService userPlantService) {
         this.plantService = plantService;
         this.journalService = journalService;
+        this.userPlantService = userPlantService;
     }
 
     @PostMapping
@@ -43,7 +46,7 @@ public class JournalResource {
         }
 
         // fetching with uuid and userId to ensure user is the owner of the plant they are modifying
-        Optional<UserPlant> optionalQueriedPlant = plantService.fetchUserPlantByUuidAndUserId(journalRequest.getEntityUuid(), simpleUser.getUserId());
+        Optional<UserPlant> optionalQueriedPlant = userPlantService.fetchUserPlantByUuidAndUserId(journalRequest.getEntityUuid(), simpleUser.getUserId());
 
         if(optionalQueriedPlant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No userPlant found with given criteria.");
