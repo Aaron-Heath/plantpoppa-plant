@@ -21,13 +21,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/user-plant/{userPlantUuid}/journal")
 public class JournalResource {
-    private final PlantService plantService;
     private final JournalService journalService;
     private final UserPlantService userPlantService;
 
     @Autowired
-    public JournalResource(PlantService plantService, JournalService journalService, UserPlantService userPlantService) {
-        this.plantService = plantService;
+    public JournalResource(JournalService journalService, UserPlantService userPlantService) {
         this.journalService = journalService;
         this.userPlantService = userPlantService;
     }
@@ -63,7 +61,7 @@ public class JournalResource {
 
     }
 
-    @PutMapping
+    @PutMapping("/water")
     ResponseEntity<?> updateWatering(ServletRequest request,
                                      @RequestBody JournalRequestDto journalRequest) {
         SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
@@ -76,7 +74,7 @@ public class JournalResource {
 
     }
 
-    @DeleteMapping
+    @DeleteMapping("/water")
     ResponseEntity<?> deleteWatering(ServletRequest request,
                                      ServletResponse response,
                                      @RequestBody JournalRequestDto journalRequest) {
