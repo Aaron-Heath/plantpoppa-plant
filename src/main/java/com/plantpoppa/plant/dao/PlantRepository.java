@@ -24,4 +24,5 @@ public interface PlantRepository extends JpaRepository<Plant, Integer> {
     nativeQuery = true)
     Optional<Plant> fetchOneById(int plantId);
 
+    Optional<Plant> findByUuid(String uuid);
 }

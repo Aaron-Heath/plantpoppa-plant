@@ -2,6 +2,7 @@ package com.plantpoppa.plant.resources;
 
 import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
+import com.plantpoppa.plant.models.dto.CreateUserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
 import com.plantpoppa.plant.services.UserPlantService;
 import jakarta.servlet.ServletRequest;
@@ -33,6 +34,21 @@ public class UserPlantResource {
 
         return new ResponseEntity<>(userPlants, HttpStatus.OK);
     }
+
+    @PostMapping
+    ResponseEntity<?> createUserPlant(ServletRequest request,
+                                      @RequestBody CreateUserPlantRequestDto userPlantRequestDto) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+
+        Optional<UserPlant> createdPlant = userPlantService.createUserPlant(simpleUser, userPlantRequestDto);
+
+        if (createdPlant.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(createdPlant.get(), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{userPlantUuid}")
     ResponseEntity<?> fetchUserPlantByUuid(@PathVariable String userPlantUuid) {
