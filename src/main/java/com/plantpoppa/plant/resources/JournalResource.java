@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/journal")
+@RequestMapping("/api/user-plant/{userPlantUuid}/journal")
 public class JournalResource {
     private final PlantService plantService;
     private final JournalService journalService;
@@ -32,21 +32,19 @@ public class JournalResource {
         this.userPlantService = userPlantService;
     }
 
-    @PostMapping
+    @PostMapping("/water")
     ResponseEntity<?> createWatering(ServletRequest request,
                                      ServletResponse response,
+                                     @PathVariable String userPlantUuid,
                                      @RequestBody JournalRequestDto journalRequest) {
         SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
-        if(journalRequest.getEntityUuid().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing request parameters, please try again");
-        }
 
         if(simpleUser == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again.");
         }
 
         // fetching with uuid and userId to ensure user is the owner of the plant they are modifying
-        Optional<UserPlant> optionalQueriedPlant = userPlantService.fetchUserPlantByUuidAndUserId(journalRequest.getEntityUuid(), simpleUser.getUserId());
+        Optional<UserPlant> optionalQueriedPlant = userPlantService.fetchUserPlantByUuidAndUserId(userPlantUuid, simpleUser.getUserId());
 
         if(optionalQueriedPlant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No userPlant found with given criteria.");
@@ -59,8 +57,6 @@ public class JournalResource {
         } else {
             Watering watering = journalService.createWatering(userPlant, journalRequest.getEntryDate());
         }
-
-
         HashMap<String,String> res = new HashMap<String,String>();
         res.put("message", "watering recorded");
         return new ResponseEntity<>(res, HttpStatus.OK);
