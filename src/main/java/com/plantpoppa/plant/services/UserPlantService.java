@@ -4,7 +4,7 @@ import com.plantpoppa.plant.dao.UserPlantRepository;
 import com.plantpoppa.plant.models.Plant;
 import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
-import com.plantpoppa.plant.models.dto.CreateUserPlantRequestDto;
+import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class UserPlantService {
         this.plantService = plantService;
     }
 
-    public Optional<UserPlant> createUserPlant(SimpleUser simpleUser, CreateUserPlantRequestDto userPlantRequest) {
+    public Optional<UserPlant> createUserPlant(SimpleUser simpleUser, UserPlantRequestDto userPlantRequest) {
         // Get plant from plant service
         String plantUuid = userPlantRequest.getPlantUuid();
         Optional<Plant> queriedPlant = plantService.fetchOneByUuid(plantUuid);
@@ -76,5 +76,38 @@ public class UserPlantService {
 
     public Optional<UserPlant> fetchUserPlantByUuidAndUserId(String uuid, int userId) {
         return userPlantRepository.findByUuidAndUserId(uuid, userId);
+    }
+
+    public Optional<UserPlantDto> updateUserPlant(UserPlantRequestDto userPlantRequest,
+                                                  SimpleUser simpleUser) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantRequest.getUserPlantUuid(), simpleUser.getUserId());
+
+        if(queriedUserPlant.isEmpty()) {
+            System.out.println("No userPlant found");
+            return Optional.empty();
+        }
+
+        UserPlant foundUserPlant = queriedUserPlant.get();
+
+        // Update userPlant
+        if(userPlantRequest.getNickname() != null && !userPlantRequest.getNickname().isBlank()) {
+            foundUserPlant.setNickname(userPlantRequest.getNickname());
+        }
+
+        if(userPlantRequest.getPlantUuid() != null && !userPlantRequest.getPlantUuid().isBlank()) {
+            Optional<Plant> queriedPlant = plantService.fetchOneByUuid(userPlantRequest.getPlantUuid());
+            if(queriedPlant.isEmpty()) {
+                System.out.println("No plant found");
+                return Optional.empty();
+            }
+
+            Plant foundPlant = queriedPlant.get();
+
+            foundUserPlant.setPlant(foundPlant);
+        }
+
+
+        return Optional.of(userPlantRepository.saveAndFlush(foundUserPlant).toDto());
+
     }
 }

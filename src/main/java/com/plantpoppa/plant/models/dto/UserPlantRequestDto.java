@@ -1,15 +1,17 @@
 package com.plantpoppa.plant.models.dto;
 
-public class CreateUserPlantRequestDto {
+public class UserPlantRequestDto {
     private String nickname;
+    private String userPlantUuid;
     private String plantUuid;
 
-    public CreateUserPlantRequestDto(String nickname, String plantUuid){
+    public UserPlantRequestDto(String nickname, String userPlantUuid, String plantUuid){
         this.nickname = nickname;
+        this.userPlantUuid = userPlantUuid;
         this.plantUuid = plantUuid;
     }
 
-    public CreateUserPlantRequestDto() {
+    public UserPlantRequestDto() {
 
     }
 
@@ -19,6 +21,14 @@ public class CreateUserPlantRequestDto {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getUserPlantUuid() {
+        return userPlantUuid;
+    }
+
+    public void setUserPlantUuid(String userPlantUuid) {
+        this.userPlantUuid = userPlantUuid;
     }
 
     public String getPlantUuid() {

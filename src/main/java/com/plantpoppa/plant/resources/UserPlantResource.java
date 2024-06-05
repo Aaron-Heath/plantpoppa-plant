@@ -2,7 +2,7 @@ package com.plantpoppa.plant.resources;
 
 import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
-import com.plantpoppa.plant.models.dto.CreateUserPlantRequestDto;
+import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
 import com.plantpoppa.plant.services.UserPlantService;
 import jakarta.servlet.ServletRequest;
@@ -37,7 +37,7 @@ public class UserPlantResource {
 
     @PostMapping
     ResponseEntity<?> createUserPlant(ServletRequest request,
-                                      @RequestBody CreateUserPlantRequestDto userPlantRequestDto) {
+                                      @RequestBody UserPlantRequestDto userPlantRequestDto) {
         SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
 
         Optional<UserPlant> createdPlant = userPlantService.createUserPlant(simpleUser, userPlantRequestDto);
@@ -58,6 +58,24 @@ public class UserPlantResource {
         }
         UserPlant userPlant = optionalUserPlant.get();
         return new ResponseEntity<>(userPlant, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{userPlantUuid}")
+    ResponseEntity<?> updateUserPlantByUuid(ServletRequest request,
+                                            @PathVariable String userPlantUuid,
+                                            @RequestBody UserPlantRequestDto userPlantRequest) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+
+        userPlantRequest.setUserPlantUuid(userPlantUuid);
+
+        Optional<UserPlantDto> updatedUserPlantDto = userPlantService.updateUserPlant(userPlantRequest, simpleUser);
+
+        if(updatedUserPlantDto.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to update at this time. Please try again later.");
+        }
+
+        return new ResponseEntity<>(updatedUserPlantDto.get(), HttpStatus.OK);
+
     }
 
 }

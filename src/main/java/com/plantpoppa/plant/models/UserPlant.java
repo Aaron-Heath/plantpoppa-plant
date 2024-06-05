@@ -1,6 +1,7 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.plantpoppa.plant.models.dto.UserPlantDto;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
@@ -125,5 +126,15 @@ public class UserPlant {
 
     public void setLastWatered(LocalDate lastWatered) {
         this.lastWatered = lastWatered;
+    }
+
+    public UserPlantDto toDto() {
+        return new UserPlantDto.UserPlantDtoBuilder()
+                .uuid(this.uuid)
+                .nickname(this.nickname)
+                .plant(this.plant)
+                .snooze(this.snooze)
+                .lastWatered(this.lastWatered)
+                .build();
     }
 }
