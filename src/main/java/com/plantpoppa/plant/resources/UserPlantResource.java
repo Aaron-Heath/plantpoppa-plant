@@ -78,4 +78,18 @@ public class UserPlantResource {
 
     }
 
+    @DeleteMapping("/{userPlantUuid}")
+    ResponseEntity<?> deleteUserPlantByUuid(ServletRequest request,
+                                            @PathVariable String userPlantUuid) {
+        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+
+        int result = userPlantService.deleteUserPlant(userPlantUuid, simpleUser);
+
+        if (result == 99) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to delete record.");
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

@@ -67,6 +67,10 @@ public class Plant {
     public Plant() {
     }
 
+    public void removeUserPlant(UserPlant userPlant) {
+        this.userPlants.remove(userPlant);
+    }
+
     public int getPlantId() {
         return plantId;
     }

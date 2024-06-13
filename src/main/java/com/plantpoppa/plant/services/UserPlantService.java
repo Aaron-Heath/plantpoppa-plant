@@ -4,6 +4,7 @@ import com.plantpoppa.plant.dao.UserPlantRepository;
 import com.plantpoppa.plant.models.Plant;
 import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserPlant;
+import com.plantpoppa.plant.models.Watering;
 import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +110,25 @@ public class UserPlantService {
 
         return Optional.of(userPlantRepository.saveAndFlush(foundUserPlant).toDto());
 
+    }
+
+    public int deleteUserPlant(String userPlantUuid, SimpleUser simpleUser) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantUuid, simpleUser.getUserId());
+
+        if(queriedUserPlant.isEmpty()) {
+            return 99; // placeholder int to denote no record found
+        }
+
+        UserPlant foundUserPlant = queriedUserPlant.get();
+
+        for (Watering watering : foundUserPlant.getWaterings()) { // Remove all child entries. Required for JPA relationship
+            foundUserPlant.removeWatering(watering);
+        }
+        foundUserPlant.getWaterings().clear();
+//        foundUserPlant.removePlant();
+
+
+        userPlantRepository.delete(foundUserPlant);
+        return 0; // placeholder number to indicate all went well
     }
 }
