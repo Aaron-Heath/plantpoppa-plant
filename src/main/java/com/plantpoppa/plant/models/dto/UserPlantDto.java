@@ -1,7 +1,6 @@
 package com.plantpoppa.plant.models.dto;
 
 import com.plantpoppa.plant.models.Plant;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 

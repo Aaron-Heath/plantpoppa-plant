@@ -1,6 +1,7 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.plantpoppa.plant.models.dto.UserPlantDto;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
@@ -11,7 +12,8 @@ import java.util.UUID;
 @Entity
 @Table(name="user_plant")
 public class UserPlant {
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_plant_generator")
+    @SequenceGenerator(name="user_plant_generator", sequenceName = "user_plant_new_user_plant_id_seq", allocationSize = 1)
     @Column(name = "user_plant_id")
     private @Id int userPlantId;
 
@@ -29,7 +31,7 @@ public class UserPlant {
     private LocalDate snooze;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "userPlant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userPlant", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Watering> waterings;
 
     @Formula("(SELECT MAX(w.watering_date) FROM watering w WHERE w.user_plant_id = user_plant_id)")
@@ -61,6 +63,21 @@ public class UserPlant {
     }
 
     public UserPlant() {
+    }
+
+    public void addWatering(Watering watering) {
+        this.waterings.add(watering);
+        watering.setUserPlant(this);
+    }
+
+    public void removeWatering(Watering watering) {
+        this.waterings.remove(watering);
+        watering.setUserPlant(null);
+    }
+
+    public void removePlant() {
+        this.plant.removeUserPlant(this);
+        this.setPlant(null);
     }
 
     public int getUserPlantId() {
@@ -125,5 +142,15 @@ public class UserPlant {
 
     public void setLastWatered(LocalDate lastWatered) {
         this.lastWatered = lastWatered;
+    }
+
+    public UserPlantDto toDto() {
+        return new UserPlantDto.UserPlantDtoBuilder()
+                .uuid(this.uuid)
+                .nickname(this.nickname)
+                .plant(this.plant)
+                .snooze(this.snooze)
+                .lastWatered(this.lastWatered)
+                .build();
     }
 }

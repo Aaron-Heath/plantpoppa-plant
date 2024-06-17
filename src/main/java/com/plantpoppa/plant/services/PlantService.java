@@ -21,11 +21,9 @@ import java.util.Optional;
 public class PlantService {
 
     private final PlantRepository plantRepository;
-    private final UserPlantRepository userPlantRepository;
 
     @Autowired
-    public PlantService(PlantRepository plantRepository, UserPlantRepository userPlantRepository) {
-        this.userPlantRepository = userPlantRepository;
+    public PlantService(PlantRepository plantRepository) {
         this.plantRepository = plantRepository;
     }
 
@@ -36,4 +34,6 @@ public class PlantService {
     public Optional<Plant> fetchOneById(int plantId) {
         return plantRepository.fetchOneById(plantId);
     }
+
+    public Optional<Plant> fetchOneByUuid(String uuid) {return plantRepository.findByUuid(uuid);}
 }
