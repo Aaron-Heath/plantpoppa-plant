@@ -1,6 +1,6 @@
 package com.plantpoppa.plant.resources;
 
-import com.plantpoppa.plant.models.UserEntity;
+import com.plantpoppa.plant.models.dto.UserDto;
 import com.plantpoppa.plant.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class UserResource {
 
     @GetMapping
     ResponseEntity<?> findAll() {
-        List<UserEntity> users = userService.findAll();
+        List<UserDto> users = userService.findAll();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
