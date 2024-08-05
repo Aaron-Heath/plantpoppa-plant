@@ -24,12 +24,14 @@ public class JournalService {
      * @param userPlant to maintain relationship between data.
      * @return created watering
      * */
-    public Watering createWatering(UserPlant userPlant) {
+    public UserPlant createWatering(UserPlant userPlant) {
         LocalDate today = LocalDate.now();
         Watering watering = new Watering();
         watering.setUserPlant(userPlant);
         watering.setWateringDate(today);
-        return wateringRepository.save(watering);
+        wateringRepository.save(watering);
+
+        return userPlant;
     }
 
     /**
@@ -38,7 +40,7 @@ public class JournalService {
      * @param wateringDate
      * @return created watering.
      */
-    public Watering createWatering(UserPlant userPlant, LocalDate wateringDate) {
+    public UserPlant createWatering(UserPlant userPlant, LocalDate wateringDate) {
         LocalDate today = LocalDate.now();
         if (wateringDate.isAfter(today)) {
             return null;
@@ -47,7 +49,9 @@ public class JournalService {
         Watering watering = new Watering();
         watering.setUserPlant(userPlant);
         watering.setWateringDate(wateringDate);
-        return wateringRepository.save(watering);
+        wateringRepository.save(watering);
+
+        return userPlant;
     }
 
     public void updateWatering(LocalDate date, int wateringId) {
