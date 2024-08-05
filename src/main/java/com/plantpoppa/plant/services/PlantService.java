@@ -28,11 +28,11 @@ public class PlantService {
     }
 
     public List<Plant> fetchAll() {
-        return plantRepository.fetchAll();
+        return plantRepository.findAll();
     }
 
     public Optional<Plant> fetchOneById(int plantId) {
-        return plantRepository.fetchOneById(plantId);
+        return plantRepository.findOneByPlantId(plantId);
     }
 
     public Optional<Plant> fetchOneByUuid(String uuid) {return plantRepository.findByUuid(uuid);}
