@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -51,13 +50,13 @@ public class JournalResource {
         UserPlant userPlant = optionalQueriedPlant.get();
 
         if(journalRequest.getEntryDate() == null) {
-            Watering watering = journalService.createWatering(userPlant);
+            userPlant = journalService.createWatering(userPlant);
         } else {
-            Watering watering = journalService.createWatering(userPlant, journalRequest.getEntryDate());
+            userPlant = journalService.createWatering(userPlant, journalRequest.getEntryDate());
         }
-        HashMap<String,String> res = new HashMap<String,String>();
-        res.put("message", "watering recorded");
-        return new ResponseEntity<>(res, HttpStatus.OK);
+
+        Optional<UserPlant> updatedUserPlant = userPlantService.refreshUserPlant(userPlant);
+        return new ResponseEntity<>(updatedUserPlant.get(), HttpStatus.OK);
 
     }
 

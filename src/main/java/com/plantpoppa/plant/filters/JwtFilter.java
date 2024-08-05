@@ -1,6 +1,5 @@
 package com.plantpoppa.plant.filters;
 
-import com.ctc.wstx.util.StringUtil;
 import com.hubspot.horizon.HttpClient;
 import com.hubspot.horizon.HttpRequest;
 import com.hubspot.horizon.HttpResponse;

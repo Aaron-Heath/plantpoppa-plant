@@ -50,7 +50,7 @@ public class UserPlantService {
     }
 
     public List<UserPlant> fetchAllUserPlants() {
-        return userPlantRepository.fetchAllUserPlants();
+        return userPlantRepository.findAll();
     }
 
     public List<UserPlant> fetchUserPlantsByUser(int userId) {
@@ -130,5 +130,9 @@ public class UserPlantService {
 
         userPlantRepository.delete(foundUserPlant);
         return 0; // placeholder number to indicate all went well
+    }
+
+    public Optional<UserPlant> refreshUserPlant(UserPlant userPlant) {
+        return userPlantRepository.findByUuid(userPlant.getUuid());
     }
 }
