@@ -33,6 +33,7 @@ public class AuthService {
     public UserEntity createUser(CreateUserDto createUserDto) {
         UserEntity user = createUserDto.toUser();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER");
         userRepository.save(user);
         return user;
     }
