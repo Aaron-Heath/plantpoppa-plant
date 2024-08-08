@@ -27,6 +27,10 @@ public class PlantService {
         this.plantRepository = plantRepository;
     }
 
+    public long count() {
+        return plantRepository.count();
+    }
+
     public List<Plant> fetchAll() {
         return plantRepository.findAll();
     }

@@ -1,10 +1,11 @@
 package com.plantpoppa.plant.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plantpoppa.plant.models.dto.UserDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity {
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private @Id int userId;
 
@@ -23,9 +25,13 @@ public class UserEntity {
     @Column(name="lastname")
     private String lastName;
 
+    @Email
+    @NotNull
     private String email;
 
-    @Column(name="pw_hash")
+    @Column(name="password")
+    @NotNull
+    @JsonIgnore
     private String password;
 
     private String phone;

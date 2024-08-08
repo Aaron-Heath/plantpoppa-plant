@@ -27,6 +27,6 @@ ENV PP_AUTH_URL=$PP_AUTH_URL
 ARG JAR_FILE=target/plant-0.0.1-SNAPSHOT.jar
 ADD ${JAR_FILE} app.jar
 ADD application.properties application.properties
-ADD application-prod.properties application-prod.properties
+ADD src/main/resources/application-prod.properties application-prod.properties
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

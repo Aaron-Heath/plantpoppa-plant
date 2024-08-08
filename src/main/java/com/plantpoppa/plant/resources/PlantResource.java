@@ -31,6 +31,11 @@ public class PlantResource {
         return plantService.fetchAll();
     }
 
+    @GetMapping("/count")
+    long count() {
+        return plantService.count();
+    }
+
     @GetMapping("/{plantId}")
     ResponseEntity<?> fetchOneById(@PathVariable int plantId) {
         Optional<Plant> plant = plantService.fetchOneById(plantId);
