@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name="waterings")
 public class Watering {
     @Column(name = "watering_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

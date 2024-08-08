@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_account")
+@Table(name = "users")
 public class UserEntity {
 
     @Column(name = "user_id")
