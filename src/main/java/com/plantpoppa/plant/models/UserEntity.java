@@ -4,19 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plantpoppa.plant.models.dto.UserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
+import java.util.Set;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class UserEntity {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private @Id int userId;
+    private @Id int id;
 
+    @Column(unique = true)
     private String uuid = String.valueOf(UUID.randomUUID());
 
     @Column(name = "firstname")
@@ -27,72 +32,19 @@ public class UserEntity {
 
     @Email
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @Column(name="password")
     @NotNull
     @JsonIgnore
     private String password;
-
     private String phone;
-
     private String zip;
-
-    private byte[] salt;
-
     private String role;
 
-
-    // Full constructor
-    public UserEntity(int user_id, String uuid, String email, String password, String firstName, String lastName, String phone, String zip, byte[] salt, String role) {
-        this.userId = user_id;
-        // Add if condition for UserBuilder user creation
-        if(uuid == null) {
-            this.uuid = String.valueOf(UUID.randomUUID());
-        } else {
-            this.uuid = uuid;
-        }
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.zip = zip;
-        this.salt = salt;
-        this.role = role;
-    }
-
-    // Constructor without id
-    public UserEntity(String uuid, String email, String password, String firstName, String lastName, String phone, String zip, byte[] salt, String role) {
-        this.uuid = uuid;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.zip = zip;
-        this.salt = salt;
-        this.role = role;
-    }
-    //Constructor without pw_hash and without salt
-    public UserEntity(int userId, String email, String firstName, String lastName, String phone, String zip, String role) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-        this.zip = zip;
-        this.role = role;
-    }
-
-    //Constructor with email/password
-    public UserEntity(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-    // Empty Constructor
-    public UserEntity() {
-    }
+    @OneToMany(mappedBy = "user")
+    private Set<UserPlant> userPlants;
 
     public UserDto toDto() {
         return new UserDto.UserDtoBuilder()
@@ -105,96 +57,15 @@ public class UserEntity {
                 .role(this.getRole()).build();
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid){
-        this.uuid = uuid;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public byte[] getSalt() {
-        return salt;
-    }
-
-    public void setSalt(byte[] salt) {
-        this.salt = salt;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public UserBuilder toBuilder() {
         return new UserBuilder()
-                .user_id(this.userId)
+                .user_id(this.id)
                 .firstname(this.firstName)
                 .lastname(this.lastName)
                 .email(this.email)
                 .pw_hash(this.password)
                 .phone(this.phone)
-                .zip(this.zip)
-                .salt(this.salt);
+                .zip(this.zip);
     }
 
 
@@ -204,10 +75,9 @@ public class UserEntity {
         private String firstname;
         private String lastname;
         private String email;
-        private String pw_hash;
+        private String password;
         private String phone;
         private String zip;
-        private byte[] salt;
         private String role;
 
         // Empty Constructor
@@ -240,7 +110,7 @@ public class UserEntity {
         }
 
         public UserBuilder pw_hash(String pw_hash) {
-            this.pw_hash = pw_hash;
+            this.password = pw_hash;
             return this;
         }
 
@@ -255,21 +125,22 @@ public class UserEntity {
         }
 
         public UserBuilder salt(byte[] salt) {
-            this.salt = salt;
             return this;
         }
 
         public UserEntity build() {
-            return new UserEntity(this.user_id,
-                    this.uuid,
-                    this.email,
-                    this.pw_hash,
-                    this.firstname,
-                    this.lastname,
-                    this.phone,
-                    this.zip,
-                    this.salt,
-                    this.role);
+            UserEntity user = new UserEntity();
+            user.setId(this.user_id);
+            user.setUuid(this.uuid);
+            user.setEmail(this.email);
+            user.setPassword(this.password);
+            user.setFirstName(this.firstname);
+            user.setLastName(this.lastname);
+            user.setRole(this.role);
+            user.setZip(this.zip);
+            user.setPhone(this.phone);
+
+            return user;
         }
 
 

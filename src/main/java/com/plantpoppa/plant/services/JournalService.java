@@ -59,7 +59,7 @@ public class JournalService {
     }
 
     public void deleteEntry(int wateringId) {
-        wateringRepository.deleteByWateringId(wateringId);
+        wateringRepository.deleteById(wateringId);
         System.out.println("Journal deleted");
     }
 }

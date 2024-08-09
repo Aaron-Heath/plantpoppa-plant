@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface WateringRepository extends JpaRepository<Watering, Integer> {
 
-    Optional<Watering> getWateringByWateringId(int wateringId);
+    Optional<Watering> getWateringById(int wateringId);
 
     @Modifying
     @Transactional
@@ -23,7 +23,7 @@ public interface WateringRepository extends JpaRepository<Watering, Integer> {
 
     @Transactional
     @Modifying
-    void deleteByWateringId(int wateringId);
+    void deleteById(int wateringId);
 
     @Transactional
     @Modifying

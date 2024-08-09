@@ -1,13 +1,12 @@
 package com.plantpoppa.plant.services;
 
 import com.plantpoppa.plant.dao.UserPlantRepository;
-import com.plantpoppa.plant.models.Plant;
-import com.plantpoppa.plant.models.SimpleUser;
-import com.plantpoppa.plant.models.UserPlant;
-import com.plantpoppa.plant.models.Watering;
+import com.plantpoppa.plant.models.*;
 import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
+import com.plantpoppa.plant.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,7 +24,8 @@ public class UserPlantService {
         this.plantService = plantService;
     }
 
-    public Optional<UserPlant> createUserPlant(SimpleUser simpleUser, UserPlantRequestDto userPlantRequest) {
+    public Optional<UserPlant> createUserPlant(UserEntity user, UserPlantRequestDto userPlantRequest) {
+
         // Get plant from plant service
         String plantUuid = userPlantRequest.getPlantUuid();
         Optional<Plant> queriedPlant = plantService.fetchOneByUuid(plantUuid);
@@ -33,12 +33,13 @@ public class UserPlantService {
             System.out.println("No plant found with given id");
             return Optional.empty();
         }
+
         Plant foundPlant = queriedPlant.get();
 
         // Create UserPlant from dto
         UserPlant userPlant = new UserPlant();
         userPlant.setNickname(userPlantRequest.getNickname());
-        userPlant.setUserId(simpleUser.getUserId());
+        userPlant.setUser(user);
         userPlant.setPlant(foundPlant);
 
         //save/flush changes

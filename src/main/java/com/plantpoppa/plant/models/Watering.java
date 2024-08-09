@@ -6,11 +6,11 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="waterings")
+@Table(name="watering")
 public class Watering {
     @Column(name = "watering_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Id int wateringId;
+    private @Id int id;
 
     @Column(name = "watering_date")
     LocalDate wateringDate;
@@ -20,8 +20,8 @@ public class Watering {
     @JoinColumn(name = "user_plant_id", nullable = false)
     private UserPlant userPlant;
 
-    public Watering(int wateringId, LocalDate wateringDate) {
-        this.wateringId = wateringId;
+    public Watering(int id, LocalDate wateringDate) {
+        this.id = id;
         this.userPlant = userPlant;
         this.wateringDate = wateringDate;
     }
@@ -29,12 +29,12 @@ public class Watering {
     public Watering() {
     }
 
-    public int getWateringId() {
-        return wateringId;
+    public int getId() {
+        return id;
     }
 
-    public void setWateringId(int wateringId) {
-        this.wateringId = wateringId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getWateringDate() {
