@@ -74,7 +74,7 @@ public class UserPlantService {
         return userPlantDtos;
     }
 
-    public Optional<UserPlant> fetchUserPlantByUuidAndUserId(String uuid, int userId) {
+    public Optional<UserPlant> findUserPlantByUuidAndUserId(String uuid, int userId) {
         return userPlantRepository.findByUuidAndUserId(uuid, userId);
     }
 

@@ -58,8 +58,12 @@ public class UserPlantResource {
 
 
     @GetMapping("/{userPlantUuid}")
-    ResponseEntity<?> fetchUserPlantByUuid(@PathVariable String userPlantUuid) {
-        Optional<UserPlant> optionalUserPlant = userPlantService.fetchUserPlantByUuid(userPlantUuid);
+    ResponseEntity<?> fetchUserPlantByUuid(@PathVariable String userPlantUuid,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        // Search by Uuid and UserId to ensure the right user accesses this plant.
+        Optional<UserPlant> optionalUserPlant = userPlantService.findUserPlantByUuidAndUserId(userPlantUuid, userDetails.getUserId());
+
         if(optionalUserPlant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserPlant not found");
         }

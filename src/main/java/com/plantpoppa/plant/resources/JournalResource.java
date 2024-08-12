@@ -38,7 +38,7 @@ public class JournalResource {
 
 
         // fetching with uuid and userId to ensure user is the owner of the plant they are modifying
-        Optional<UserPlant> optionalQueriedPlant = userPlantService.fetchUserPlantByUuidAndUserId(userPlantUuid, userDetails.getUserId());
+        Optional<UserPlant> optionalQueriedPlant = userPlantService.findUserPlantByUuidAndUserId(userPlantUuid, userDetails.getUserId());
 
         if(optionalQueriedPlant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No userPlant found with given criteria.");
@@ -47,9 +47,9 @@ public class JournalResource {
         UserPlant userPlant = optionalQueriedPlant.get();
 
         if(journalRequest.getEntryDate() == null) {
-            userPlant = journalService.createWatering(userPlant);
+            userPlant = journalService.createWatering(userPlant, userDetails.getUserId());
         } else {
-            userPlant = journalService.createWatering(userPlant, journalRequest.getEntryDate());
+            userPlant = journalService.createWatering(userPlant, journalRequest.getEntryDate(), userDetails.getUserId());
         }
 
         Optional<UserPlant> updatedUserPlant = userPlantService.refreshUserPlant(userPlant);
@@ -59,9 +59,10 @@ public class JournalResource {
 
     @PutMapping("/water")
     ResponseEntity<?> updateWatering(ServletRequest request,
-                                     @RequestBody JournalRequestDto journalRequest) {
+                                     @RequestBody JournalRequestDto journalRequest,
+                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        journalService.updateWatering(journalRequest.getEntryDate(), journalRequest.getEntityId());
+        journalService.updateWatering(journalRequest.getEntryDate(), journalRequest.getEntityId(), userDetails);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -70,8 +71,9 @@ public class JournalResource {
     @DeleteMapping("/water")
     ResponseEntity<?> deleteWatering(ServletRequest request,
                                      ServletResponse response,
-                                     @RequestBody JournalRequestDto journalRequest) {
-        journalService.deleteEntry(journalRequest.getEntityId());
+                                     @RequestBody JournalRequestDto journalRequest,
+                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+        journalService.deleteEntry(journalRequest.getEntityId(), userDetails.getUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
