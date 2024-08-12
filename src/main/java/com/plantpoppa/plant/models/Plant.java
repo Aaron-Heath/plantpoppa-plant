@@ -1,16 +1,15 @@
 package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+@Table(name = "plant")
 public class Plant {
     @JsonProperty("plant_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private int plantId;
 

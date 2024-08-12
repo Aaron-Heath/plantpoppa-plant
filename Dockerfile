@@ -1,32 +1,16 @@
 FROM maven:3.8.5-openjdk-17 AS build
 
-ARG DB_USER
-ARG DB_PW
-ARG DB_URL
-ARG CREDENTIAL_MANAGER_UUID
-ARG CREDENTIAL_MANAGER_SECRET
-ARG PP_AUTH_URL
-
 CMD ["mkdir", "app"]
 WORKDIR app/
 
 EXPOSE 8080
 
-
-ENV PLANTPOPPA_DATASOURCE_USER=$DB_USER
-ENV PLANTPOPPA_DATASOURCE_PW=$DB_PW
-
-ENV PLANTPOPPA_DATASOURCE_URL=$DB_URL
-
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV CREDENTIAL_MANAGER_UUID=$CREDENTIAL_MANAGER_UUID
-ENV CREDENTIAL_MANAGER_SECRET=$CREDENTIAL_MANAGER_SECRET
-ENV PP_AUTH_URL=$PP_AUTH_URL
-
-
-ARG JAR_FILE=target/plant-0.0.1-SNAPSHOT.jar
+ARG RESOURCES_FOLDER=src/main/resources
+ARG JAR_FILE=target/plant-0.2-SNAPSHOT.jar
 ADD ${JAR_FILE} app.jar
-ADD application.properties application.properties
-ADD application-prod.properties application-prod.properties
+ADD ${RESOURCES_FOLDER}/import.sql import.sql
+ADD ${RESOURCES_FOLDER}/application.properties application.properties
+ADD ${RESOURCES_FOLDER}/application-prod.properties application-prod.properties
+ADD ${RESOURCES_FOLDER}/application-test.properties application-test.properties
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

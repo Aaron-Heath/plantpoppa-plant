@@ -1,10 +1,7 @@
 package com.plantpoppa.plant.services;
 
 import com.plantpoppa.plant.dao.UserPlantRepository;
-import com.plantpoppa.plant.models.Plant;
-import com.plantpoppa.plant.models.SimpleUser;
-import com.plantpoppa.plant.models.UserPlant;
-import com.plantpoppa.plant.models.Watering;
+import com.plantpoppa.plant.models.*;
 import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,8 @@ public class UserPlantService {
         this.plantService = plantService;
     }
 
-    public Optional<UserPlant> createUserPlant(SimpleUser simpleUser, UserPlantRequestDto userPlantRequest) {
+    public Optional<UserPlant> createUserPlant(UserEntity user, UserPlantRequestDto userPlantRequest) {
+
         // Get plant from plant service
         String plantUuid = userPlantRequest.getPlantUuid();
         Optional<Plant> queriedPlant = plantService.fetchOneByUuid(plantUuid);
@@ -33,12 +31,13 @@ public class UserPlantService {
             System.out.println("No plant found with given id");
             return Optional.empty();
         }
+
         Plant foundPlant = queriedPlant.get();
 
         // Create UserPlant from dto
         UserPlant userPlant = new UserPlant();
         userPlant.setNickname(userPlantRequest.getNickname());
-        userPlant.setUserId(simpleUser.getUserId());
+        userPlant.setUser(user);
         userPlant.setPlant(foundPlant);
 
         //save/flush changes
@@ -50,7 +49,7 @@ public class UserPlantService {
     }
 
     public List<UserPlant> fetchAllUserPlants() {
-        return userPlantRepository.fetchAllUserPlants();
+        return userPlantRepository.findAll();
     }
 
     public List<UserPlant> fetchUserPlantsByUser(int userId) {
@@ -75,13 +74,13 @@ public class UserPlantService {
         return userPlantDtos;
     }
 
-    public Optional<UserPlant> fetchUserPlantByUuidAndUserId(String uuid, int userId) {
+    public Optional<UserPlant> findUserPlantByUuidAndUserId(String uuid, int userId) {
         return userPlantRepository.findByUuidAndUserId(uuid, userId);
     }
 
     public Optional<UserPlantDto> updateUserPlant(UserPlantRequestDto userPlantRequest,
-                                                  SimpleUser simpleUser) {
-        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantRequest.getUserPlantUuid(), simpleUser.getUserId());
+                                                  int userId) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantRequest.getUserPlantUuid(), userId);
 
         if(queriedUserPlant.isEmpty()) {
             System.out.println("No userPlant found");
@@ -112,8 +111,8 @@ public class UserPlantService {
 
     }
 
-    public int deleteUserPlant(String userPlantUuid, SimpleUser simpleUser) {
-        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantUuid, simpleUser.getUserId());
+    public int deleteUserPlant(String userPlantUuid, int userId) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantUuid, userId);
 
         if(queriedUserPlant.isEmpty()) {
             return 99; // placeholder int to denote no record found
@@ -130,5 +129,9 @@ public class UserPlantService {
 
         userPlantRepository.delete(foundUserPlant);
         return 0; // placeholder number to indicate all went well
+    }
+
+    public Optional<UserPlant> refreshUserPlant(UserPlant userPlant) {
+        return userPlantRepository.findByUuid(userPlant.getUuid());
     }
 }
