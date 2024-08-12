@@ -4,9 +4,7 @@ import com.plantpoppa.plant.dao.UserPlantRepository;
 import com.plantpoppa.plant.models.*;
 import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
 import com.plantpoppa.plant.models.dto.UserPlantDto;
-import com.plantpoppa.plant.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -81,8 +79,8 @@ public class UserPlantService {
     }
 
     public Optional<UserPlantDto> updateUserPlant(UserPlantRequestDto userPlantRequest,
-                                                  SimpleUser simpleUser) {
-        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantRequest.getUserPlantUuid(), simpleUser.getUserId());
+                                                  int userId) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantRequest.getUserPlantUuid(), userId);
 
         if(queriedUserPlant.isEmpty()) {
             System.out.println("No userPlant found");
@@ -113,8 +111,8 @@ public class UserPlantService {
 
     }
 
-    public int deleteUserPlant(String userPlantUuid, SimpleUser simpleUser) {
-        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantUuid, simpleUser.getUserId());
+    public int deleteUserPlant(String userPlantUuid, int userId) {
+        Optional<UserPlant> queriedUserPlant = userPlantRepository.findByUuidAndUserId(userPlantUuid, userId);
 
         if(queriedUserPlant.isEmpty()) {
             return 99; // placeholder int to denote no record found

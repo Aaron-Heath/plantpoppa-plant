@@ -1,6 +1,5 @@
 package com.plantpoppa.plant.resources;
 
-import com.plantpoppa.plant.models.SimpleUser;
 import com.plantpoppa.plant.models.UserEntity;
 import com.plantpoppa.plant.models.UserPlant;
 import com.plantpoppa.plant.models.dto.UserPlantRequestDto;
@@ -71,12 +70,12 @@ public class UserPlantResource {
     @PatchMapping("/{userPlantUuid}")
     ResponseEntity<?> updateUserPlantByUuid(ServletRequest request,
                                             @PathVariable String userPlantUuid,
-                                            @RequestBody UserPlantRequestDto userPlantRequest) {
-        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+                                            @RequestBody UserPlantRequestDto userPlantRequest,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         userPlantRequest.setUserPlantUuid(userPlantUuid);
 
-        Optional<UserPlantDto> updatedUserPlantDto = userPlantService.updateUserPlant(userPlantRequest, simpleUser);
+        Optional<UserPlantDto> updatedUserPlantDto = userPlantService.updateUserPlant(userPlantRequest, userDetails.getUserId());
 
         if(updatedUserPlantDto.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to update at this time. Please try again later.");
@@ -88,10 +87,10 @@ public class UserPlantResource {
 
     @DeleteMapping("/{userPlantUuid}")
     ResponseEntity<?> deleteUserPlantByUuid(ServletRequest request,
-                                            @PathVariable String userPlantUuid) {
-        SimpleUser simpleUser = (SimpleUser) request.getAttribute("userInfo");
+                                            @PathVariable String userPlantUuid,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        int result = userPlantService.deleteUserPlant(userPlantUuid, simpleUser);
+        int result = userPlantService.deleteUserPlant(userPlantUuid, userDetails.getUserId());
 
         if (result == 99) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to delete record.");
