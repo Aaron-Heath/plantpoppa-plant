@@ -1,65 +1,33 @@
 package com.plantpoppa.plant.models.dto;
 
 import com.plantpoppa.plant.models.Plant;
+import com.plantpoppa.plant.models.Watering;
+import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
+@Data
 public class UserPlantDto {
     private String uuid;
     private String nickname;
     private LocalDate snooze;
     private Plant plant;
     private LocalDate lastWatered;
+    private LocalDate nextWatering;
+    private Collection<Watering> waterings;
 
-    public UserPlantDto(String uuid, String nickname, LocalDate snooze, Plant plant, LocalDate lastWatered) {
+    public UserPlantDto(String uuid, String nickname, LocalDate snooze, Plant plant, LocalDate lastWatered, LocalDate nextWatering, Collection<Watering> waterings) {
         this.uuid = uuid;
         this.nickname = nickname;
         this.snooze = snooze;
         this.plant = plant;
         this.lastWatered = lastWatered;
+        this.nextWatering = nextWatering;
+        this.waterings = waterings;
     }
 
     public UserPlantDto() {
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public LocalDate getSnooze() {
-        return snooze;
-    }
-
-    public void setSnooze(LocalDate snooze) {
-        this.snooze = snooze;
-    }
-
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public void setPlant(Plant plant) {
-        this.plant = plant;
-    }
-
-    public LocalDate getLastWatered() {
-        return lastWatered;
-    }
-
-    public void setLastWatered(LocalDate lastWatered) {
-        this.lastWatered = lastWatered;
     }
 
     public static class UserPlantDtoBuilder {
@@ -68,6 +36,8 @@ public class UserPlantDto {
         private LocalDate snooze;
         private Plant plant;
         private LocalDate lastWatered;
+        private LocalDate nextWatering;
+        private Collection<Watering> waterings;
 
         public UserPlantDtoBuilder() {
 
@@ -98,13 +68,25 @@ public class UserPlantDto {
             return this;
         }
 
+        public UserPlantDtoBuilder nextWatering (LocalDate nextWatering) {
+            this.nextWatering = nextWatering;
+            return this;
+        }
+
+        public UserPlantDtoBuilder waterings(Collection<Watering> waterings) {
+            this.waterings = waterings;
+            return this;
+        }
+
         public UserPlantDto build() {
             return new UserPlantDto(
                     this.uuid,
                     this.nickname,
                     this.snooze,
                     this.plant,
-                    this.lastWatered
+                    this.lastWatered,
+                    this.nextWatering,
+                    this.waterings
             );
         }
     }

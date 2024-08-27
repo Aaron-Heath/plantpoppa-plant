@@ -43,6 +43,20 @@ public class UserPlant {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Transient
+    public LocalDate getNextWatering() {
+        // if snooze return snooze
+        if(snooze != null) {
+            return snooze;
+        }
+        // if no last watered return today
+        if (lastWatered == null) {
+            return LocalDate.now();
+        }
+        // if no snooze return last watered + watering frequency
+        LocalDate nextWatering = lastWatered.plusDays(plant.getWaterFrequency());
+        return nextWatering;
+    }
 
     public void removeWatering(Watering watering) {
         this.waterings.remove(watering);

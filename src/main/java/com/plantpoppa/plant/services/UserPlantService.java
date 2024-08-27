@@ -67,6 +67,8 @@ public class UserPlantService {
                             .snooze(userPlant.getSnooze())
                             .plant(userPlant.getPlant())
                             .lastWatered(userPlant.getLastWatered())
+                            .nextWatering(userPlant.getNextWatering())
+                            .waterings(userPlant.getWaterings())
                             .build()
             );
         });
