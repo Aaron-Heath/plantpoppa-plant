@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class UserResource {
         List<UserDto> users = userService.findAll();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    long count() {
+        return userService.count();
     }
 
     @GetMapping("/me")
@@ -59,5 +65,16 @@ public class UserResource {
         return new ResponseEntity<>(updatedUser.get(),HttpStatus.OK);
 
 
+    }
+
+    @DeleteMapping("/me")
+    ResponseEntity<?> deleteMe(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.deleteMe(userDetails);
+
+        HashMap<String, String> responseBody = new HashMap<>();
+
+        responseBody.put("message", "User deleted.");
+
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 }

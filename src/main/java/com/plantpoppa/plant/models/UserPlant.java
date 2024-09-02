@@ -5,6 +5,8 @@ import com.plantpoppa.plant.models.dto.UserPlantDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -36,11 +38,13 @@ public class UserPlant {
 
     @ManyToOne
     @JoinColumn(name="plant_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Plant plant;
 
     @ManyToOne
     @JsonManagedReference
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity user;
 
     @Transient

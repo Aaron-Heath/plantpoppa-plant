@@ -21,12 +21,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+
     public List<UserDto> findAll() {
         List<UserEntity> rawUsers = userRepository.findAll();
         // Convert raw users to Dtos to remove sensitive information before being returned.
         List<UserDto> userDtos =  new ArrayList<>();
         rawUsers.forEach(user -> userDtos.add(user.toDto()));
         return userDtos;
+    }
+
+    public long count() {
+        return userRepository.count();
     }
 
     public Optional<UserEntity> findAuthenticatedUser(CustomUserDetails userDetails) {
@@ -56,5 +61,9 @@ public class UserService {
             user.setZip(userDto.getZip());
         }
         return Optional.of(userRepository.saveAndFlush(user).toDto());
+    }
+
+    public void deleteMe(CustomUserDetails userDetails) {
+        userRepository.deleteById(userDetails.getUserId());
     }
 }

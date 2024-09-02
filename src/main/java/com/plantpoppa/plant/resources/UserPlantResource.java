@@ -56,6 +56,11 @@ public class UserPlantResource {
         return new ResponseEntity<>(createdPlant.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    long count() {
+        return userPlantService.count();
+    }
+
 
     @GetMapping("/{userPlantUuid}")
     ResponseEntity<?> fetchUserPlantByUuid(@PathVariable String userPlantUuid,

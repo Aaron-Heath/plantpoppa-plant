@@ -22,6 +22,10 @@ public class UserPlantService {
         this.plantService = plantService;
     }
 
+    public long count() {
+        return userPlantRepository.count();
+    }
+
     public Optional<UserPlant> createUserPlant(UserEntity user, UserPlantRequestDto userPlantRequest) {
 
         // Get plant from plant service
