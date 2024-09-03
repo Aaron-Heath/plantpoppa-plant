@@ -63,6 +63,32 @@ public class UserService {
         return Optional.of(userRepository.saveAndFlush(user).toDto());
     }
 
+    public Optional<UserDto> removePhone(CustomUserDetails userDetails) {
+        Optional<UserEntity> optionalUser = findAuthenticatedUser(userDetails);
+
+        if(optionalUser.isEmpty()) {
+            return Optional.empty();
+        }
+
+        UserEntity user = optionalUser.get();
+
+        user.setPhone(null);
+
+        return (Optional.of(userRepository.saveAndFlush(user).toDto()));
+    }
+
+    public Optional<UserDto> removeZip(CustomUserDetails userDetails) {
+        Optional<UserEntity> optionalUser = findAuthenticatedUser(userDetails);
+
+        if (optionalUser.isEmpty()) return Optional.empty();
+
+        UserEntity user = optionalUser.get();
+
+        user.setZip(null);
+
+        return (Optional.of(userRepository.saveAndFlush(user).toDto()));
+    }
+
     public void deleteMe(CustomUserDetails userDetails) {
         userRepository.deleteById(userDetails.getUserId());
     }

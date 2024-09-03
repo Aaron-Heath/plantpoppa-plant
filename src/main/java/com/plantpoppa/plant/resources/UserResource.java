@@ -77,4 +77,25 @@ public class UserResource {
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
+
+    @DeleteMapping("/me/phone")
+    ResponseEntity<?> deleteMyPhone(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Optional<UserDto> userDto = userService.removePhone(userDetails);
+
+        if (userDto.isEmpty()) throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again.");
+
+        return new ResponseEntity<>(userDto.get(),HttpStatus.OK);
+
+
+    }
+
+    @DeleteMapping("/me/zip")
+    ResponseEntity<?> deleteMyZip(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Optional<UserDto> userDto = userService.removeZip(userDetails);
+        if (userDto.isEmpty()) throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong. Please try again.");
+
+        return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
+
+
+    }
 }
