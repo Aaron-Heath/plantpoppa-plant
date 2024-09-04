@@ -22,6 +22,10 @@ public class UserPlantService {
         this.plantService = plantService;
     }
 
+    public long count() {
+        return userPlantRepository.count();
+    }
+
     public Optional<UserPlant> createUserPlant(UserEntity user, UserPlantRequestDto userPlantRequest) {
 
         // Get plant from plant service
@@ -67,6 +71,8 @@ public class UserPlantService {
                             .snooze(userPlant.getSnooze())
                             .plant(userPlant.getPlant())
                             .lastWatered(userPlant.getLastWatered())
+                            .nextWatering(userPlant.getNextWatering())
+                            .waterings(userPlant.getWaterings())
                             .build()
             );
         });

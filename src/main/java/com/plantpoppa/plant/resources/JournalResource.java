@@ -2,6 +2,7 @@ package com.plantpoppa.plant.resources;
 
 
 import com.plantpoppa.plant.models.UserPlant;
+import com.plantpoppa.plant.models.Watering;
 import com.plantpoppa.plant.models.dto.JournalRequestDto;
 import com.plantpoppa.plant.security.CustomUserDetails;
 import com.plantpoppa.plant.services.JournalService;
@@ -15,7 +16,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user-plant/{userPlantUuid}/journal")
@@ -27,6 +31,18 @@ public class JournalResource {
     public JournalResource(JournalService journalService, UserPlantService userPlantService) {
         this.journalService = journalService;
         this.userPlantService = userPlantService;
+    }
+
+    @GetMapping
+    ResponseEntity<?>getWaterings(ServletRequest request,
+                                  ServletRequest response,
+                                  @PathVariable String userPlantUuid,
+                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserPlant userPlant = userPlantService.findUserPlantByUuidAndUserId(userPlantUuid, userDetails.getUserId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "UserPlant not found"));
+
+        Set<Watering> waterings = userPlant.getWaterings();
+        return new ResponseEntity<>(waterings,HttpStatus.OK);
+
     }
 
     @PostMapping("/water")

@@ -4,6 +4,7 @@ import com.plantpoppa.plant.dao.UserRepository;
 import com.plantpoppa.plant.models.UserEntity;
 import com.plantpoppa.plant.models.dto.UserDto;
 import com.plantpoppa.plant.security.CustomUserDetails;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+
     public List<UserDto> findAll() {
         List<UserEntity> rawUsers = userRepository.findAll();
         // Convert raw users to Dtos to remove sensitive information before being returned.
@@ -28,8 +30,63 @@ public class UserService {
         return userDtos;
     }
 
+    public long count() {
+        return userRepository.count();
+    }
+
     public Optional<UserEntity> findAuthenticatedUser(CustomUserDetails userDetails) {
         int userId = userDetails.getUserId();
         return userRepository.findById(userId);
     };
+
+    public Optional<UserDto> updateUser(CustomUserDetails userDetails, UserDto userDto) {
+        Optional<UserEntity> authenticatedUser = findAuthenticatedUser(userDetails);
+        if(authenticatedUser.isEmpty()) return Optional.empty();
+
+        UserEntity user = authenticatedUser.get();
+
+        // Not allowed to be blank. WIll check if they are in the request.
+        if((userDto.getFirstname() != null) && !userDto.getFirstname().isBlank()) {
+            user.setFirstName(userDto.getFirstname());
+        }
+        if(userDto.getLastname() != null && !userDto.getLastname().isBlank()) {
+            user.setLastName(userDto.getLastname());
+        }
+
+        // Nullable. Will be updated to whatever the user has entered.
+        user.setPhone(userDto.getPhone());
+        user.setZip(userDto.getZip());
+
+        return Optional.of(userRepository.saveAndFlush(user).toDto());
+    }
+
+    public Optional<UserDto> removePhone(CustomUserDetails userDetails) {
+        Optional<UserEntity> optionalUser = findAuthenticatedUser(userDetails);
+
+        if(optionalUser.isEmpty()) {
+            return Optional.empty();
+        }
+
+        UserEntity user = optionalUser.get();
+
+        user.setPhone(null);
+
+        return (Optional.of(userRepository.saveAndFlush(user).toDto()));
+    }
+
+    public Optional<UserDto> removeZip(CustomUserDetails userDetails) {
+        Optional<UserEntity> optionalUser = findAuthenticatedUser(userDetails);
+
+        if (optionalUser.isEmpty()) return Optional.empty();
+
+        UserEntity user = optionalUser.get();
+
+        user.setZip(null);
+
+        return (Optional.of(userRepository.saveAndFlush(user).toDto()));
+    }
+
+    public void deleteMe(CustomUserDetails userDetails) {
+        userRepository.deleteById(userDetails.getUserId());
+    }
 }
