@@ -2,6 +2,8 @@ package com.plantpoppa.plant.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -18,6 +20,7 @@ public class Watering {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "user_plant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserPlant userPlant;
 
     public Watering(int id, LocalDate wateringDate) {

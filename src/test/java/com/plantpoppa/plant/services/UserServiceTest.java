@@ -54,7 +54,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenFirstNameLastnamdPhone_UpdatesThoseParams() {
+    public void givenFirstNameLastAndPhone_UpdatesThoseParams() {
         UserDto mockOutput = user.toDto();
         mockOutput.setFirstname("Json");
         mockOutput.setLastname("Bourne");
@@ -68,7 +68,6 @@ public class UserServiceTest {
                         .uuid(user.getUuid())
                         .user_id(user.getId())
                         .email(user.getEmail())
-                        .zip(user.getZip())
                         .build();
 
         when(mockUserRepository.findById(user.getId())).thenReturn(Optional.of(user));
