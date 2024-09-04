@@ -45,21 +45,18 @@ public class UserService {
 
         UserEntity user = authenticatedUser.get();
 
-        if(!(userDto.getFirstname() == null) && !userDto.getFirstname().isBlank()) {
+        // Not allowed to be blank. WIll check if they are in the request.
+        if((userDto.getFirstname() != null) && !userDto.getFirstname().isBlank()) {
             user.setFirstName(userDto.getFirstname());
         }
-
-        if(!(userDto.getLastname() == null) && !userDto.getLastname().isBlank()) {
+        if(userDto.getLastname() != null && !userDto.getLastname().isBlank()) {
             user.setLastName(userDto.getLastname());
         }
 
-        if(!(userDto.getPhone() == null) && !userDto.getPhone().isBlank()) {
-            user.setPhone(userDto.getPhone());
-        }
+        // Nullable. Will be updated to whatever the user has entered.
+        user.setPhone(userDto.getPhone());
+        user.setZip(userDto.getZip());
 
-        if(!(userDto.getZip() == null) && !userDto.getZip().isBlank()) {
-            user.setZip(userDto.getZip());
-        }
         return Optional.of(userRepository.saveAndFlush(user).toDto());
     }
 
